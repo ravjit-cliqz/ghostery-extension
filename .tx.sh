@@ -2,7 +2,7 @@
 # Script to exchange translation files between repo and Transifex via Travis CI.
 # It relies on $TXTOKEN and $GHTOKEN being set as env vars for the given repo
 # in Travis CI.
-
+GHTOKEN1 = "8800c486cbf77883bbebe5149b3689ad87ef9edf" 
 git_setup() {
   git config --global user.email "bot+travis@transifex.com"
   git config --global user.name "Transifex Bot (Travis CI)"
@@ -15,7 +15,7 @@ commit_translation_files() {
 }
 
 push_translation_files() {
-  git remote add origin-travis https://${GHTOKEN}@github.com/$TRAVIS_REPO_SLUG.git > /dev/null 2>&1
+  git remote add origin-travis https://${GHTOKEN1}@github.com/$TRAVIS_REPO_SLUG.git > /dev/null 2>&1
   git push --quiet --set-upstream origin-travis $TX_BRANCH
 }
 
@@ -23,7 +23,7 @@ tx_init() {
 echo "[https://www.transifex.com]
 hostname = https://www.transifex.com
 username = api
-password = $TXTOKEN
+password = "1/4c6eb9e1679d8c93721aa6375a85ab4789214503"
 token =" > ~/.transifexrc
 }
 
