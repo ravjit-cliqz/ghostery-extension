@@ -721,8 +721,8 @@ function onMessageHandler(request, sender, callback) {
 	} else if (name === 'getAndroidDashboardStats') {
 		if (insights.isEnabled) {
 			// message.interval can be 'day', 'week', 'month' or 'all'
-			Promise.all([insights.action(‘getDashboardStats’, ‘day’), 
-				insights.action(‘getDashboardStats’, ‘week’)].then([dayStats, weekStats] => {
+			Promise.all([insights.action('getDashboardStats', 'day'),
+				insights.action('getDashboardStats', 'week')]).then(([dayStats, weekStats]) => {
 					chrome.runtime.sendMessage({
 						target: 'ANDROID_BROWSER',
 						action: 'dashboardData',
