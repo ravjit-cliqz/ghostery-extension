@@ -721,12 +721,16 @@ function onMessageHandler(request, sender, callback) {
 	} else if (name === 'getAndroidDashboardStats') {
 		if (insights.isEnabled) {
 			// message.interval can be 'day', 'week', 'month' or 'all'
-			insights.action('getDashboardStats', message.interval).then((stats) => {
-				chrome.runtime.sendMessage({
-					target: 'ANDROID_BROWSER',
-					action: 'dashboardData',
-					payload: stats,
-				});
+			Promise.all([insights.action(‘getDashboardStats’, ‘day’), 
+				insights.action(‘getDashboardStats’, ‘week’)].then([dayStats, weekStats] => {
+					chrome.runtime.sendMessage({
+						target: 'ANDROID_BROWSER',
+						action: 'dashboardData',
+						payload: {
+							day: dayStats,
+							week: weekStats
+						}
+					});
 			});
 		}
 	} else if (name === 'getCliqzModuleData') {
@@ -1579,7 +1583,7 @@ function initializeGhosteryModules() {
 	}).catch((e) => {
 		log('cliqzStartup error', e);
 	});
-
+	setCliqzModuleEnabled(insights, true);
 	if (IS_EDGE) {
 		setCliqzModuleEnabled(hpn, false);
 		setCliqzModuleEnabled(humanweb, false);
