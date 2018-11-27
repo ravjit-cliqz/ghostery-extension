@@ -722,16 +722,21 @@ function onMessageHandler(request, sender, callback) {
 		if (insights.isEnabled) {
 			// message.interval can be 'day', 'week', 'month' or 'all'
 			Promise.all([insights.action('getDashboardStats', 'day'),
-				insights.action('getDashboardStats', 'week')]).then(([dayStats, weekStats]) => {
+				insights.action('getDashboardStats', 'week'), utils.getActiveTab]).then(([dayStats, weekStats, tab]) => {
 					chrome.runtime.sendMessage({
 						target: 'ANDROID_BROWSER',
 						action: 'dashboardData',
 						payload: {
 							day: dayStats,
-							week: weekStats
+							week: weekStats,
+							panel: panelData.get('panel', tab)
 						}
 					});
 			});
+		}
+	} else if (name === 'clearAndroidDashboardStats') {
+		if (insights.isEnabled) {
+			insights.action('clearData');
 		}
 	} else if (name === 'getCliqzModuleData') {
 		const modules = { adblock: {}, antitracking: {} };
