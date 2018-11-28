@@ -720,9 +720,12 @@ function onMessageHandler(request, sender, callback) {
 		});
 	} else if (name === 'getAndroidDashboardStats') {
 		if (insights.isEnabled) {
+			const getTab = new Promise((resolve) => {
+				utils.getActiveTab(resolve);
+			});
 			// message.interval can be 'day', 'week', 'month' or 'all'
 			Promise.all([insights.action('getDashboardStats', 'day'),
-				insights.action('getDashboardStats', 'week'), utils.getActiveTab]).then(([dayStats, weekStats, tab]) => {
+				insights.action('getDashboardStats', 'week'), getTab]).then(([dayStats, weekStats, tab]) => {
 					chrome.runtime.sendMessage({
 						target: 'ANDROID_BROWSER',
 						action: 'dashboardData',
